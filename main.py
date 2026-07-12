@@ -43,13 +43,20 @@ def main():
             thing.draw(screen)
         pygame.display.flip()
 
-        # Collision check vs player
+        # Collision check asteroid vs player
         for asteroid in asteroids:
             if asteroid.collides_with(player):
                 log_event("player_hit")
                 print("Game over!")
                 sys.exit()
 
+        # Collision check asteroid vs shot
+        for asteroid in asteroids:
+            for shot in shots:
+                if asteroid.collides_with(shot):
+                    log_event("asteroid_shot")
+                    pygame.sprite.Sprite.kill(asteroid)
+                    pygame.sprite.Sprite.kill(shot)
         
         
 if __name__ == "__main__":
