@@ -6,6 +6,7 @@ from player import Player
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
 from shot import Shot
+from gameover import game_over
 
 def main():
     # Groups setup
@@ -30,8 +31,14 @@ def main():
     while True:
         log_state()
 
+        # Exit game via window's X button
         for event in pygame.event.get():
-            pass
+            if event.type == pygame.QUIT:
+                return
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    return
         
         # Movement
         dt = clock.tick(60) / 1000
@@ -47,15 +54,14 @@ def main():
         for asteroid in asteroids:
             if asteroid.collides_with(player):
                 log_event("player_hit")
-                print("Game over!")
-                sys.exit()
+                game_over(screen, clock)
+                return
 
         # Collision check asteroid vs shot
         for asteroid in asteroids:
             for shot in shots:
                 if asteroid.collides_with(shot):
                     log_event("asteroid_shot")
-                    #pygame.sprite.Sprite.kill(asteroid)
                     asteroid.split()
                     pygame.sprite.Sprite.kill(shot)
         
